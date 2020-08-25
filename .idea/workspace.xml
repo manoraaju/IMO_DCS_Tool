@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d200e680-2d2b-4079-9386-1f2c35248d95" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1gJ4n1R7xiuXtPIfAZ8yK2fZ341" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\mkrishnasamy\PycharmProjects\IMO DCS Tool (Conda)\venv" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.GUI Version">
+    <configuration name="GUI Version" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="IMO DCS Tool (Conda)" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GUI Version.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="IMO DCS Tool (Conda)" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.GUI Version" />
+        <item itemvalue="Python.test" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d200e680-2d2b-4079-9386-1f2c35248d95" name="Default Changelist" comment="" />
+      <created>1597819524102</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1597819524102</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1597842997823">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1597842997823" />
+    <state width="1259" height="89" key="GridCell.Tab.0.bottom" timestamp="1598367752890">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="89" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1598367752890" />
+    <state width="1259" height="89" key="GridCell.Tab.0.center" timestamp="1598367752890">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="89" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1598367752890" />
+    <state width="1259" height="89" key="GridCell.Tab.0.left" timestamp="1598367752890">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="89" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1598367752890" />
+    <state width="1259" height="89" key="GridCell.Tab.0.right" timestamp="1598367752890">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="89" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1598367752890" />
+    <state width="1259" height="89" key="GridCell.Tab.1.bottom" timestamp="1598367768592">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="89" key="GridCell.Tab.1.bottom/0.0.1280.680@0.0.1280.680" timestamp="1598367768592" />
+    <state width="1259" height="89" key="GridCell.Tab.1.center" timestamp="1598367768592">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="89" key="GridCell.Tab.1.center/0.0.1280.680@0.0.1280.680" timestamp="1598367768592" />
+    <state width="1259" height="89" key="GridCell.Tab.1.left" timestamp="1598367768592">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="89" key="GridCell.Tab.1.left/0.0.1280.680@0.0.1280.680" timestamp="1598367768592" />
+    <state width="1259" height="89" key="GridCell.Tab.1.right" timestamp="1598367768592">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1259" height="89" key="GridCell.Tab.1.right/0.0.1280.680@0.0.1280.680" timestamp="1598367768592" />
+    <state x="142" y="0" key="SettingsEditor" timestamp="1598247484031">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="142" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1598247484031" />
+    <state width="647" height="347" key="XDebugger.FullValuePopup" timestamp="1598264905716">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="647" height="347" key="XDebugger.FullValuePopup/0.0.1280.680@0.0.1280.680" timestamp="1598264905716" />
+    <state x="303" y="1" width="672" height="678" key="search.everywhere.popup" timestamp="1598272052710">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="303" y="1" width="672" height="678" key="search.everywhere.popup/0.0.1280.680@0.0.1280.680" timestamp="1598272052710" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test.py</url>
+          <line>7</line>
+          <option name="timeStamp" value="133" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/GUI Version.py</url>
+          <line>1471</line>
+          <option name="timeStamp" value="138" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="y_hat" />
+        <watch expression="wb_data[0][0].value" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>
