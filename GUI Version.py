@@ -1,7 +1,7 @@
 ﻿## Import Libraries
 
 import tkinter as tk
-import threading, numbers
+import threading, numbers, copy
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
@@ -131,7 +131,7 @@ class IMO_DCS_App(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self.title("IMO DCS Data Validator")
-        self.maxsize(700, 500)  # width x height
+        self.maxsize(700, 600)  # width x height
         self.config(bg="skyblue")
         Label_Font = Font(family="Arial", size=10)
         top_frame = tk.Frame(self, width=200, height=200, bg='grey')
@@ -165,8 +165,8 @@ class IMO_DCS_App(tk.Tk):
         self.cbox2.grid(row=2, column=1, padx=5, pady=5, sticky='w' + 'e' + 'n' + 's')
 
         self.GISIS = tk.IntVar(self)
-        self.cbox3 = tk.Checkbutton(top_frame, text="GISIS(xlsx)",
-                                    variable=self.GISIS, bg='grey')
+        self.cbox3 = tk.Checkbutton(top_frame, text="GISIS(TBC)",
+                                    variable=self.GISIS, bg='grey', state=NORMAL)
         self.cbox3.grid(row=3, column=0, padx=5, pady=5, sticky='w')
 
         self.btn_Start = ttk.Button(top_frame, text="Start", command=self.begin)
@@ -188,7 +188,7 @@ class IMO_DCS_App(tk.Tk):
         threading.Thread(target=self.folderSelection, daemon=True).start()
 
     def message_box(self, message):
-        print(message)
+        #print(message)
         message = message + "\n"
         self.text.tag_config('warning:', background="light yellow", foreground="blue2")
         self.text.tag_config('error:', background="yellow", foreground="red3")
@@ -770,6 +770,81 @@ class IMO_DCS_App(tk.Tk):
             self.message_box(msg)
             dcs_bdn_errors.append(msg)
 
+        ## Check and get "ROB Correction (Start) and (End)" Testing phase...
+        try:
+            if dcs_bdn_flag:
+                rob_start_cnt = 0
+                rob_end_cnt = 0
+                for index, row in df.iterrows():
+                    temp_error_msgs = []
+                    if row["Entry Type*"] == "ROB (Start)":
+                        rob_start_cnt = rob_start_cnt + 1
+                    if row["Entry Type*"] == "ROB (End)":
+                        rob_end_cnt = rob_end_cnt + 1
+                    if rob_start_cnt == 1 and (row["Entry Type*"] == "ROB (Start)"):
+                        rob_start_date_val = row["Date (DD-Mmm-YYYY)*"]
+                        if isinstance(rob_start_date_val, datetime) and (not self.is_NaT_NaN(rob_start_date_val)):
+                            global start_year_date
+                            start_year_date = rob_start_date_val
+                        else:
+                            temp_error_msgs.append("Error in ROB (Start) date. Default date of "
+                                                   "01-Jan-2020 will be used. Please check data;")
+                            self.fill_cell(df, index, "Date (DD-Mmm-YYYY)*", error_yellow_fill, "IMO DCS BDN Summary")
+
+                    if rob_start_cnt > 1 and (row["Entry Type*"] == "ROB (Start)"):
+                        temp_error_msgs.append("Error due to Multiple ROB (Start) date. Please check data;")
+                        self.fill_cell(df, index, "Date (DD-Mmm-YYYY)*", error_yellow_fill, "IMO DCS BDN Summary")
+
+                    if rob_end_cnt == 1 and (row["Entry Type*"] == "ROB (End)"):
+                        rob_end_date_val = row["Date (DD-Mmm-YYYY)*"]
+                        if isinstance(rob_end_date_val, datetime) and (not self.is_NaT_NaN(rob_end_date_val)):
+                            global end_year_date
+                            end_year_date = rob_end_date_val
+                            if EoY_flag:
+                                if end_year_date.day != 31 or end_year_date.month != 12:
+                                    temp_error_msgs.append("'End of Year' selected but the ROB (End) is not 31-Dec. " \
+                                                           "Please check ROB (End) date;")
+                                    self.fill_cell(df, index, "Date (DD-Mmm-YYYY)*", error_yellow_fill,
+                                                   "IMO DCS BDN Summary")
+
+                            if CoM_flag:
+                                if end_year_date.day == 31 and end_year_date.month == 12:
+                                    temp_error_msgs.append("'Change in Management / Chang in Flag' selected but "
+                                                           "the ROB (End) is 31-Dec-202x. Please check ROB (End) date")
+                                    self.fill_cell(df, index, "Date (DD-Mmm-YYYY)*", error_yellow_fill,
+                                                   "IMO DCS BDN Summary")
+                        else:
+                            temp_error_msgs.append("Error in ROB (End) date. Default date of "
+                                                   "31-Dec-2020 will be used. Please check data;")
+                            self.fill_cell(df, index, "Date (DD-Mmm-YYYY)*", error_yellow_fill, "IMO DCS BDN Summary")
+
+                    if rob_end_cnt > 1 and (row["Entry Type*"] == "ROB (End)"):
+                        temp_error_msgs.append("Error due to Multiple ROB (End) date. Please check data;")
+                        self.fill_cell(df, index, "Date (DD-Mmm-YYYY)*", error_yellow_fill, "IMO DCS BDN Summary")
+
+                    row_values = row[2:].values
+                    assert_empty_row = [((val =="") or (pd.isnull(val))) for val in row_values]
+                    if all(assert_empty_row):
+                        temp_error_msgs.append("Empty row for an entry type")
+                        self.fill_cell(df, index, "Entry Type*", error_yellow_fill, "IMO DCS BDN Summary")
+
+                    temp_msg = (df.iloc[index]["Errors"]).split("\n")
+                    temp_msg.extend(temp_error_msgs)
+                    temp_msg = list(filter(None, temp_msg))
+                    df.at[index, 'Errors'] = "\n".join(temp_msg)
+                msg = ("OK: Check RoB (Start) and RoB (End) date")
+                msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
+                self.message_box(msg)
+        except:
+            msg = ("Error: Check ROB (Start) and RoB (End) date")
+            msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
+            self.message_box(msg)
+            msg = ("Warning: The default date of {} and end date of {} will be used"
+                   "".format(self.date_format(start_year_date), self.date_format(end_year_date)))
+            self.message_box(msg)
+            dcs_bdn_errors.append(msg)
+
+        '''
         ## Check and get "ROB Correction (Start) and (End)"
         try:
             demo = (datetime.now())
@@ -839,6 +914,7 @@ class IMO_DCS_App(tk.Tk):
                    "".format(self.date_format(start_year_date), self.date_format(end_year_date)))
             self.message_box(msg)
             dcs_bdn_errors.append(msg)
+        '''
 
         try:
             ## Check date range
@@ -1322,7 +1398,7 @@ class IMO_DCS_App(tk.Tk):
                             sum_value = sum_value + values
                     except:
                         continue
-                print(sum_value)
+                #print(sum_value)
                 df_analysis.loc['Sum Total Fuel', col] = round(sum_value, 2)
             df_analysis['Program check on +/-5% acceptance'] = ((df_analysis['Aggregated fuel oil consumed'] -
                                                                  df_analysis["Aggregated BDN Summary"]) /
@@ -1331,8 +1407,12 @@ class IMO_DCS_App(tk.Tk):
             df_analysis["% deviation of aggregated fuel oil consumption from prediction"] = ""
             for index, row in df_analysis.iterrows():  ## Limit to two decimals
                 try:
-                    df_analysis.at[index, 'Program check on +/-5% acceptance'] = \
-                        round(df_analysis.loc[index, 'Program check on +/-5% acceptance'], 2)
+                    pct_value = df_analysis.loc[index, 'Program check on +/-5% acceptance']
+                    if (pct_value == math.inf) or (pct_value == -math.inf):
+                        df_analysis.loc[index, 'Program check on +/-5% acceptance'] = 'infinity'
+                    else:
+                        df_analysis.at[index, 'Program check on +/-5% acceptance'] = \
+                            round(pct_value, 2)
                 except:
                     continue
         except:
@@ -1421,24 +1501,44 @@ class IMO_DCS_App(tk.Tk):
             ML_errors.append("Error in obtaining Ship Type")
 
         ########################
+
+        ml_folder = "S:\\Hull\\2021 DCS MRV\\DCS\\ML Trained\\"
+        model = load_model(ml_folder + 'DCS model.h5')
+        scaler = joblib.load(ml_folder + "DCS_Scalar.save")
+        ##'total_distance','total_time','total_main','total_aux','GT','ship_type'
+        if len(ML_errors) == 0:
+            prediction_data = [dst_nm, hours_uw, me_power, ae_power, gt]
+            prediction_data.extend(ship_typ)
+            prediction_data = np.array(prediction_data)
+            prediction_data = scaler.transform(prediction_data.reshape(1, 17))
+            y_hat = model.predict(prediction_data)
+            y_hat = copy.deepcopy(round(y_hat[0][0], 2))
+            if df_critical_error == False:
+                df_analysis.at["Sum Total Fuel", 'Predicted aggregated fuel oil consumed'] = y_hat
+                df_analysis.at["Sum Total Fuel",
+                               "% deviation of aggregated fuel oil consumption from prediction"] = \
+                    round((df_analysis.loc["Sum Total Fuel", "Aggregated fuel oil consumed"] / y_hat) * 100, 2)
+
+        else:
+            ML_errors.append("Prediction error! Check data")
         ## Machine Learning Prediction
         try:
-            # ml_folder = "S:\\Hull\\2021 DCS MRV\\DCS\\ML Trained\\"
-            model = load_model('DCS model.h5')
-            scaler = joblib.load("DCS_Scalar.save")
+            ml_folder = "S:\\Hull\\2021 DCS MRV\\DCS\\ML Trained\\"
+            model = load_model(ml_folder+'DCS model.h5')
+            scaler = joblib.load(ml_folder+"DCS_Scalar.save")
             ##'total_distance','total_time','total_main','total_aux','GT','ship_type'
             if len(ML_errors) == 0:
-                prediction_data = [hours_uw, dst_nm, me_power, ae_power, gt]
+                prediction_data = [dst_nm, hours_uw, me_power, ae_power, gt]
                 prediction_data.extend(ship_typ)
                 prediction_data = np.array(prediction_data)
                 prediction_data = scaler.transform(prediction_data.reshape(1, 17))
                 y_hat = model.predict(prediction_data)
-                y_hat = y_hat[0][0]
+                y_hat =  copy.deepcopy(round(y_hat[0][0],2))
                 if df_critical_error == False:
                     df_analysis.at["Sum Total Fuel", 'Predicted aggregated fuel oil consumed'] = y_hat
                     df_analysis.at["Sum Total Fuel",
                                    "% deviation of aggregated fuel oil consumption from prediction"] = \
-                        (df_analysis.loc["Sum Total Fuel", "Aggregated fuel oil consumed"] / y_hat) * 100
+                        round((df_analysis.loc["Sum Total Fuel", "Aggregated fuel oil consumed"] / y_hat) * 100,2)
 
             else:
                 ML_errors.append("Prediction error! Check data")
@@ -1454,6 +1554,10 @@ class IMO_DCS_App(tk.Tk):
                 wb.create_sheet('Program Checklist')
                 ws = wb['Program Checklist']
 
+            df_analysis = df_analysis.applymap(lambda x: round(x, 2) if isinstance(x, (int, float)) else x)
+            df_analysis = df_analysis.astype(str)
+            df_analysis = df_analysis.replace('nan', '', regex=True)
+            df_analysis = df_analysis.replace('NaT', '', regex=True)
             for r in dataframe_to_rows(df_analysis, index=True, header=True):
                 if any(r):
                     ws.append(r)
@@ -1472,12 +1576,13 @@ class IMO_DCS_App(tk.Tk):
             for row in ws.rows:
                 for cell in row:
                     if cell.value:
-                        dims[cell.column] = max((dims.get(cell.column, 0), len(str(cell.value))))
+                        dims[cell.column_letter] = max((dims.get(cell.column_letter, 0), len(str(cell.value))))
             for col, value in dims.items():
                 ws.column_dimensions[col].width = value
         except:
             msg = ("Error: Saving sheet 'Program Checklist")
             msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
+            self.message_box(msg)
             df_analysis_errors.append(msg)
         ###########################
         ## Analysis of df_analysis [deviation from +- 5% deviation]
@@ -1612,7 +1717,7 @@ class IMO_DCS_App(tk.Tk):
         try:
             sheet_name = 'Program Checklist'
             ws = wb[sheet_name]
-            if abs(ws["F11"].value) <= 5:
+            if abs(float(ws["F11"].value)) <= 5:
                 sample_factor = 2
         except:
             msg = ("No ML value available! Default sampling selected!")
@@ -1639,6 +1744,7 @@ class IMO_DCS_App(tk.Tk):
         sample_df.sort_index(inplace=True)
 
         #################
+
         ###############
         try:
             ## Saving 'df_analysis' as 'Program Checklist'
@@ -1648,7 +1754,10 @@ class IMO_DCS_App(tk.Tk):
             else:
                 wb.create_sheet('Sampling Data')
                 ws = wb['Sampling Data']
-
+            sample_df = sample_df.applymap(lambda x: round(x, 2) if isinstance(x, (int, float)) else x)
+            sample_df = sample_df.astype(str)
+            sample_df = sample_df.replace('nan', '', regex=True)
+            sample_df = sample_df.replace('NaT', '', regex=True)
             for r in dataframe_to_rows(sample_df, index=True, header=True):
                 ws.append(r)
 
@@ -1661,24 +1770,50 @@ class IMO_DCS_App(tk.Tk):
             msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
             self.message_box(msg)
 
-    def make_GISIS_xlsx(self, source_dir, f_name):
+    def make_GISIS_xlsx(self, source_dir, destination_dir, file_names):
         ## ==============================================================================================================
+        files = file_names
+        col_names = ["ReportingStartDate", "ReportingEndDate", "ShipFlag", "ShipIMONumber", "ShipType",
+                     "ShipTypeOther", "ShipGrossTonnage", "ShipNetTonnage", "ShipDeadweight",
+                     "ShipMainPropulsionPowers", "ShipAuxiliaryEnginesPowers", "ShipEEDI", "ShipIceClass",
+                     "DistanceTravelled", "HoursUnderway"]
+        df = pd.DataFrame(columns=col_names)
+        try:
+            for f_name in files:
+                filename = source_dir + "\\" + f_name
+                w_book = openpyxl.load_workbook(filename, data_only=True)
+                all_values = []
+                all_values.append(w_book['IMO DCS BDN Summary']["B8"].value)  # "ReportingStartDate"
+                all_values.append(w_book['IMO DCS BDN Summary']["B9"].value)  # "ReportingEndDate"
+                all_values.append(w_book['Vessel Details']["B9"].value)  # ShipFlag
+                all_values.append(w_book['Vessel Details']["B5"].value)  # IMO Number
+                all_values.append(w_book['Vessel Details']["B7"].value)  # ShipType
+                all_values.append(w_book['Vessel Details']["B8"].value)  # ShipTypeOther
+                all_values.append(w_book['Vessel Details']["B12"].value)  # ShipGrossTonnage
+                all_values.append(w_book['Vessel Details']["B13"].value)  # ShipNetTonnage
+                all_values.append(w_book['Vessel Details']["B14"].value)  # ShipDeadweight
+                all_values.append(w_book['Vessel Details']["B15"].value)  # ShipMainPropulsionPowers
+                all_values.append(w_book['Vessel Details']["B16"].value)  # ShipAuxiliaryEnginesPowers
+                all_values.append(w_book['Vessel Details']["B17"].value)  # ShipEEDI
+                all_values.append(w_book['Vessel Details']["B18"].value)  # ShipIceClass
+                all_values.append(w_book['IMO DCS Data']["D6"].value)  # DistanceTravelled
+                all_values.append(w_book['IMO DCS Data']["C6"].value)  # HoursUnderway
+
+
+        except:
+            print("Error in loading worksheet")
+
         msg = ("To code for GISIS data extraction")
         msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
         self.message_box(msg)
 
-
-    def main_program(self, s_dir, d_dir, file_names):
-        self.btn_Start.config(state=tk.DISABLED)
-        source_dir = s_dir
-        destination_dir = d_dir
+    def misstatement_sampling(self, source_dir, destination_dir, file_names):
         files = file_names
-
         for f_name in files:
             ## Logger
-            #orig_stdout = sys.stdout
-            #log_file = open(destination_dir + "\\" + "log_" + f_name + ".log", 'w')
-            #sys.stdout = log_file
+            orig_stdout = sys.stdout
+            log_file = open(destination_dir + "\\" + "log_" + f_name + ".log", 'w')
+            sys.stdout = log_file
             filename = source_dir + "\\" + f_name
             ## Import file
             try:
@@ -1699,11 +1834,9 @@ class IMO_DCS_App(tk.Tk):
                 self.misstatement_prediction(source_dir, f_name)
             if self.sampling.get():
                 self.sampling_data(source_dir, f_name)
-            if self.GISIS.get():
-                self.make_GISIS_xlsx(source_dir, f_name)
 
-            #sys.stdout = orig_stdout
-            #log_file.close()
+            sys.stdout = orig_stdout
+            log_file.close()
 
             try:
                 for sheet_name in wb.sheetnames:  # to check whether sheet you need already exists
@@ -1720,13 +1853,25 @@ class IMO_DCS_App(tk.Tk):
                 msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
                 self.message_box(msg)
 
+
+    def main_program(self, s_dir, d_dir, file_names):
+        self.btn_Start.config(state=tk.DISABLED)
+        source_dir = s_dir
+        destination_dir = d_dir
+        files = file_names
+        if (self.mistatement.get()) or (self.sampling.get()):
+            self.misstatement_sampling(source_dir=source_dir,destination_dir=destination_dir, file_names=files)
+
+        if self.GISIS.get():
+            self.make_GISIS_xlsx(source_dir=source_dir,destination_dir=destination_dir, file_names=files)
+
+
         self.btn_Start.config(state=tk.NORMAL)
-        msg = "=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x="
-        self.message_box(msg)
-        msg = ("Completed Analysis! Check your output folder")
-        msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
-        self.message_box(msg)
-        msg = "=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x="
+        msg = ("""
+=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=
+                Completed Analysis! Check your output folder
+=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=
+""")
         self.message_box(msg)
 
 
