@@ -16,6 +16,256 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 import joblib
 from tensorflow.keras.models import load_model
 ## Global Variables
+global country_codes ## ISO3166, Alpha 3
+country_codes = {'Afghanistan':'AFG',
+'Albania':'ALB',
+'Algeria':'DZA',
+'American Samoa':'ASM',
+'Andorra':'AND',
+'Angola':'AGO',
+'Anguilla':'AIA',
+'Antarctica':'ATA',
+'Antigua and Barbuda':'ATG',
+'Argentina':'ARG',
+'Armenia':'ARM',
+'Aruba':'ABW',
+'Australia':'AUS',
+'Austria':'AUT',
+'Azerbaijan':'AZE',
+'Bahamas (the)':'BHS',
+'Bahrain':'BHR',
+'Bangladesh':'BGD',
+'Barbados':'BRB',
+'Belarus':'BLR',
+'Belgium':'BEL',
+'Belize':'BLZ',
+'Benin':'BEN',
+'Bermuda':'BMU',
+'Bhutan':'BTN',
+'Bolivia (Plurinational State of)':'BOL',
+'Bonaire, Sint Eustatius and Saba':'BES',
+'Bosnia and Herzegovina':'BIH',
+'Botswana':'BWA',
+'Bouvet Island':'BVT',
+'Brazil':'BRA',
+'British Indian Ocean Territory (the)':'IOT',
+'Brunei Darussalam':'BRN',
+'Bulgaria':'BGR',
+'Burkina Faso':'BFA',
+'Burundi':'BDI',
+'Cabo Verde':'CPV',
+'Cambodia':'KHM',
+'Cameroon':'CMR',
+'Canada':'CAN',
+'Cayman Islands (the)':'CYM',
+'Central African Republic (the)':'CAF',
+'Chad':'TCD',
+'Chile':'CHL',
+'China':'CHN',
+'Christmas Island':'CXR',
+'Cocos (Keeling) Islands (the)':'CCK',
+'Colombia':'COL',
+'Comoros (the)':'COM',
+'Congo (the Democratic Republic of the)':'COD',
+'Congo (the)':'COG',
+'Cook Islands (the)':'COK',
+'Costa Rica':'CRI',
+'Croatia':'HRV',
+'Cuba':'CUB',
+'Curaçao':'CUW',
+'Cyprus':'CYP',
+'Czechia':'CZE',
+"Côte d'Ivoire":'CIV',
+'Denmark':'DNK',
+'Djibouti':'DJI',
+'Dominica':'DMA',
+'Dominican Republic (the)':'DOM',
+'Ecuador':'ECU',
+'Egypt':'EGY',
+'El Salvador':'SLV',
+'Equatorial Guinea':'GNQ',
+'Eritrea':'ERI',
+'Estonia':'EST',
+'Eswatini':'SWZ',
+'Ethiopia':'ETH',
+'Falkland Islands (the) [Malvinas]':'FLK',
+'Faroe Islands (the)':'FRO',
+'Fiji':'FJI',
+'Finland':'FIN',
+'France':'FRA',
+'French Guiana':'GUF',
+'French Polynesia':'PYF',
+'French Southern Territories (the)':'ATF',
+'Gabon':'GAB',
+'Gambia (the)':'GMB',
+'Georgia':'GEO',
+'Germany':'DEU',
+'Ghana':'GHA',
+'Gibraltar':'GIB',
+'Greece':'GRC',
+'Greenland':'GRL',
+'Grenada':'GRD',
+'Guadeloupe':'GLP',
+'Guam':'GUM',
+'Guatemala':'GTM',
+'Guernsey':'GGY',
+'Guinea':'GIN',
+'Guinea-Bissau':'GNB',
+'Guyana':'GUY',
+'Haiti':'HTI',
+'Heard Island and McDonald Islands':'HMD',
+'Holy See (the)':'VAT',
+'Honduras':'HND',
+'Hong Kong':'HKG',
+'Hungary':'HUN',
+'Iceland':'ISL',
+'India':'IND',
+'Indonesia':'IDN',
+'Iran (Islamic Republic of)':'IRN',
+'Iraq':'IRQ',
+'Ireland':'IRL',
+'Isle of Man':'IMN',
+'Israel':'ISR',
+'Italy':'ITA',
+'Jamaica':'JAM',
+'Japan':'JPN',
+'Jersey':'JEY',
+'Jordan':'JOR',
+'Kazakhstan':'KAZ',
+'Kenya':'KEN',
+'Kiribati':'KIR',
+"Korea (the Democratic People's Republic of)":'PRK',
+'Korea (the Republic of)':'KOR',
+'Kuwait':'KWT',
+'Kyrgyzstan':'KGZ',
+"Lao People's Democratic Republic (the)":'LAO',
+'Latvia':'LVA',
+'Lebanon':'LBN',
+'Lesotho':'LSO',
+'Liberia':'LBR',
+'Libya':'LBY',
+'Liechtenstein':'LIE',
+'Lithuania':'LTU',
+'Luxembourg':'LUX',
+'Macao':'MAC',
+'Madagascar':'MDG',
+'Malawi':'MWI',
+'Malaysia':'MYS',
+'Maldives':'MDV',
+'Mali':'MLI',
+'Malta':'MLT',
+'Marshall Islands (the)':'MHL',
+'Martinique':'MTQ',
+'Mauritania':'MRT',
+'Mauritius':'MUS',
+'Mayotte':'MYT',
+'Mexico':'MEX',
+'Micronesia (Federated States of)':'FSM',
+'Moldova (the Republic of)':'MDA',
+'Monaco':'MCO',
+'Mongolia':'MNG',
+'Montenegro':'MNE',
+'Montserrat':'MSR',
+'Morocco':'MAR',
+'Mozambique':'MOZ',
+'Myanmar':'MMR',
+'Namibia':'NAM',
+'Nauru':'NRU',
+'Nepal':'NPL',
+'Netherlands (the)':'NLD',
+'New Caledonia':'NCL',
+'New Zealand':'NZL',
+'Nicaragua':'NIC',
+'Niger (the)':'NER',
+'Nigeria':'NGA',
+'Niue':'NIU',
+'Norfolk Island':'NFK',
+'Northern Mariana Islands (the)':'MNP',
+'Norway':'NOR',
+'Oman':'OMN',
+'Pakistan':'PAK',
+'Palau':'PLW',
+'Palestine, State of':'PSE',
+'Panama':'PAN',
+'Papua New Guinea':'PNG',
+'Paraguay':'PRY',
+'Peru':'PER',
+'Philippines (the)':'PHL',
+'Pitcairn':'PCN',
+'Poland':'POL',
+'Portugal':'PRT',
+'Puerto Rico':'PRI',
+'Qatar':'QAT',
+'Republic of North Macedonia':'MKD',
+'Romania':'ROU',
+'Russian Federation (the)':'RUS',
+'Rwanda':'RWA',
+'Réunion':'REU',
+'Saint Barthélemy':'BLM',
+'Saint Helena, Ascension and Tristan da Cunha':'SHN',
+'Saint Kitts and Nevis':'KNA',
+'Saint Lucia':'LCA',
+'Saint Martin (French part)':'MAF',
+'Saint Pierre and Miquelon':'SPM',
+'Saint Vincent and the Grenadines':'VCT',
+'Samoa':'WSM',
+'San Marino':'SMR',
+'Sao Tome and Principe':'STP',
+'Saudi Arabia':'SAU',
+'Senegal':'SEN',
+'Serbia':'SRB',
+'Seychelles':'SYC',
+'Sierra Leone':'SLE',
+'Singapore':'SGP',
+'Sint Maarten (Dutch part)':'SXM',
+'Slovakia':'SVK',
+'Slovenia':'SVN',
+'Solomon Islands':'SLB',
+'Somalia':'SOM',
+'South Africa':'ZAF',
+'South Georgia and the South Sandwich Islands':'SGS',
+'South Sudan':'SSD',
+'Spain':'ESP',
+'Sri Lanka':'LKA',
+'Sudan (the)':'SDN',
+'Suriname':'SUR',
+'Svalbard and Jan Mayen':'SJM',
+'Sweden':'SWE',
+'Switzerland':'CHE',
+'Syrian Arab Republic':'SYR',
+'Taiwan (Province of China)':'TWN',
+'Tajikistan':'TJK',
+'Tanzania, United Republic of':'TZA',
+'Thailand':'THA',
+'Timor-Leste':'TLS',
+'Togo':'TGO',
+'Tokelau':'TKL',
+'Tonga':'TON',
+'Trinidad and Tobago':'TTO',
+'Tunisia':'TUN',
+'Turkey':'TUR',
+'Turkmenistan':'TKM',
+'Turks and Caicos Islands (the)':'TCA',
+'Tuvalu':'TUV',
+'Uganda':'UGA',
+'Ukraine':'UKR',
+'United Arab Emirates (the)':'ARE',
+'United Kingdom of Great Britain and Northern Ireland (the)':'GBR',
+'United States Minor Outlying Islands (the)':'UMI',
+'United States of America (the)':'USA',
+'Uruguay':'URY',
+'Uzbekistan':'UZB',
+'Vanuatu':'VUT',
+'Venezuela (Bolivarian Republic of)':'VEN',
+'Viet Nam':'VNM',
+'Virgin Islands (British)':'VGB',
+'Virgin Islands (U.S.)':'VIR',
+'Wallis and Futuna':'WLF',
+'Western Sahara':'ESH',
+'Yemen':'YEM',
+'Zambia':'ZMB',
+'Zimbabwe':'ZWE',
+'Åland Islands':'ALA'}
 global dcs_template_columns
 dcs_template_columns = ['Start Date and Time (DD-Mmm-YYYY HH:MM) (UTC)*',
                         'End Date and Time (DD-Mmm-YYYY HH:MM) (UTC)*', 'Hours Underway (h)*',
@@ -107,15 +357,6 @@ vdetails_end_col = 4
 global error_yellow_fill
 error_yellow_fill = PatternFill("solid", fgColor="00DDDD00")
 
-
-def update_start_date(self, date):
-    start_year_date = date
-
-
-def update_end_date(self, date):
-    end_year_date = date + timedelta(days=1) - timedelta(minutes=1)
-
-
 class TextRedirector(object):
     def __init__(self, widget, tag="stdout"):
         self.widget = widget
@@ -156,17 +397,17 @@ class IMO_DCS_App(tk.Tk):
         btn_Find.grid(row=1, column=2, padx=5, pady=5, sticky='w' + 'e' + 'n' + 's')
         self.mistatement = tk.IntVar(self)
         self.cbox1 = tk.Checkbutton(top_frame, text="Misstatement",
-                                    variable=self.mistatement, bg='grey')
+                                    variable=self.mistatement, bg='grey', command=self.disable_GISIS)
         self.cbox1.grid(row=2, column=0, padx=5, pady=5, sticky='w')
 
         self.sampling = tk.IntVar(self)
         self.cbox2 = tk.Checkbutton(top_frame, text="Sampling",
-                                    variable=self.sampling, bg='grey')
+                                    variable=self.sampling, bg='grey', command=self.disable_GISIS)
         self.cbox2.grid(row=2, column=1, padx=5, pady=5, sticky='w' + 'e' + 'n' + 's')
 
         self.GISIS = tk.IntVar(self)
-        self.cbox3 = tk.Checkbutton(top_frame, text="GISIS(TBC)",
-                                    variable=self.GISIS, bg='grey', state=NORMAL)
+        self.cbox3 = tk.Checkbutton(top_frame, text="GISIS Data-Gen",
+                                    variable=self.GISIS, bg='grey', state=NORMAL, command=self.disable_mistatement_sampling)
         self.cbox3.grid(row=3, column=0, padx=5, pady=5, sticky='w')
 
         self.btn_Start = ttk.Button(top_frame, text="Start", command=self.begin)
@@ -182,6 +423,21 @@ class IMO_DCS_App(tk.Tk):
         scrollb = ttk.Scrollbar(bottom_frame, command=self.text.yview)
         scrollb.grid(row=0, column=1, sticky='nsew')
         self.text['yscrollcommand'] = scrollb.set
+
+    def disable_mistatement_sampling(self):
+        if self.GISIS.get():
+            self.cbox1.config(state=DISABLED)
+            self.cbox2.config(state=DISABLED)
+        else:
+            self.cbox1.config(state=NORMAL)
+            self.cbox2.config(state=NORMAL)
+
+    def disable_GISIS(self):
+        if self.mistatement.get() or self.sampling.get():
+            self.cbox3.config(state=DISABLED)
+        else:
+            self.cbox3.config(state=NORMAL)
+
 
     def begin(self):
         '''start a thread and connect it to func'''
@@ -418,8 +674,17 @@ class IMO_DCS_App(tk.Tk):
                     temp_error_msgs = []
                     if self.is_NaT_NaN(row["Client input"]):
                         ship_type = wb['Vessel Details']["B7"].value
-                        if ship_type == "Others":
-                            temp_error_msgs.append("Please enter data;")
+                        print(index)
+                        if index == 3 and ship_type != "Others":
+                            continue
+                        if index == 3 and ship_type == "Others":
+                            temp_error_msgs.append("'Other' vessel type selected. Please enter description;")
+                            self.fill_cell(df, index, "Client input", error_yellow_fill, "Vessel Details")
+                        if index == 2 and ship_type not in vessel_types:
+                            temp_error_msgs.append("Please select vessel type from dropdown list;")
+                            self.fill_cell(df, index, "Client input", error_yellow_fill, "Vessel Details")
+                        else:
+                            temp_error_msgs.append("Empty cell. Please enter data;")
                             self.fill_cell(df, index, "Client input", error_yellow_fill, "Vessel Details")
                     temp_msg = (df.iloc[index]["Errors"]).split("\n")
                     temp_msg.extend(temp_error_msgs)
@@ -435,7 +700,7 @@ class IMO_DCS_App(tk.Tk):
             vessel_details_errors.append(msg)
 
         #print(df.iloc[2]["Client input"])
-
+        '''
         try:
             ## Check input type
             if vessel_details_flag:
@@ -447,14 +712,6 @@ class IMO_DCS_App(tk.Tk):
                     temp_msg.extend(temp_error_msgs)
                     temp_msg = list(filter(None, temp_msg))
                     df.at[2, 'Errors'] = "\n".join(temp_msg)
-                if df.iloc[2]["Client input"] == "Others":
-                    if df.iloc[3]["Client input"] == "":
-                        temp_error_msgs.append("Vessel type 'Others' selected, but empty description;")
-                        self.fill_cell(df, 3, "Client input", error_yellow_fill, "Vessel Details")
-                        temp_msg = (df.iloc[index]["Errors"]).split("\n")
-                        temp_msg.extend(temp_error_msgs)
-                        temp_msg = list(filter(None, temp_msg))
-                        df.at[3, 'Errors'] = "\n".join(temp_msg)
                 msg = ("OK: Check Vessel Input type")
                 msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
                 self.message_box(msg)
@@ -463,6 +720,7 @@ class IMO_DCS_App(tk.Tk):
             msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
             self.message_box(msg)
             vessel_details_errors.append(msg)
+        '''
 
         try:
             if vessel_details_flag:
@@ -530,6 +788,7 @@ class IMO_DCS_App(tk.Tk):
             if report_setup_flag:
                 EoY_flag = False
                 CoM_flag = False
+                DeCom_flag = False
                 for index, row in df.iterrows():
                     temp_error_msgs = []
                     col_name = "Client input"
@@ -545,8 +804,10 @@ class IMO_DCS_App(tk.Tk):
                             self.fill_cell(df, index, col_name, error_yellow_fill, "Report Setup")
                         if row[col_name] == "End of Year":
                             EoY_flag = True
-                        elif row[col_name] == "Change of Flag and Company":
+                        elif row[col_name] in ["Change of Flag and Company", "Change of Flag", "Change of Company"]:
                             CoM_flag = True
+                        elif row[col_name] == "Decommission":
+                            DeCom_flag = True
                     temp_msg = (df.iloc[index]["Errors"]).split("\n")
                     temp_msg.extend(temp_error_msgs)
                     temp_msg = list(filter(None, temp_msg))
@@ -578,7 +839,7 @@ class IMO_DCS_App(tk.Tk):
             self.message_box(msg)
             report_setup_errors.append(msg)
 
-        ## ==========================================================================================================
+        ## =================================================================================================================
         ## For analysing IMO DCS BDN Summary
         msg = ("Analysis started for file: {} and sheet name {}".format(f_name, "IMO DCS BDN Summary"))
         msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
@@ -629,10 +890,12 @@ class IMO_DCS_App(tk.Tk):
                     temp_error_msgs = []
                     if not (row.isnull().all()):
                         if self.is_NaT_NaN(row["Entry Type*"]):
-                            temp_error_msgs.append("Please select a value from the drop-down list in the template.")
+                            temp_error_msgs.append("Please select a value from the drop-down list under 'Entry Type' "
+                                                   "column in the template;")
                             self.fill_cell(df, index, "Entry Type*", error_yellow_fill, "IMO DCS BDN Summary")
                         elif (row["Entry Type*"]).strip() not in bdn_entry_type:
-                            temp_error_msgs.append("Please select a value from the drop-down list in the template.")
+                            temp_error_msgs.append("Please select a value from the drop-down list under 'Entry Type' "
+                                                   "column in the template;")
                             self.fill_cell(df, index, "Entry Type*", error_yellow_fill, "IMO DCS BDN Summary")
                     temp_msg = (df.iloc[index]["Errors"]).split("\n")
                     temp_msg.extend(temp_error_msgs)
@@ -697,12 +960,12 @@ class IMO_DCS_App(tk.Tk):
                                     "Please check your data;")
                                 self.fill_cell(df, index, "Other Emission Factor (MT CO2/MT fuel)", error_yellow_fill,
                                                "IMO DCS BDN Summary")
-                            if other_emission < 0:
-                                temp_error_msgs.append(
-                                    "Negative value for “Other Emission Factor” is entered,"
-                                    "Please check your data;")
-                                self.fill_cell(df, index, "Other Emission Factor (MT CO2/MT fuel)", error_yellow_fill,
-                                               "IMO DCS BDN Summary")
+                            # if other_emission < 0:
+                            #     temp_error_msgs.append(
+                            #         "Negative value for “Other Emission Factor” is entered,"
+                            #         "Please check your data;")
+                            #     self.fill_cell(df, index, "Other Emission Factor (MT CO2/MT fuel)", error_yellow_fill,
+                            #                    "IMO DCS BDN Summary")
                     temp_msg = (df.iloc[index]["Errors"]).split("\n")
                     temp_msg.extend(temp_error_msgs)
                     temp_msg = list(filter(None, temp_msg))
@@ -716,33 +979,34 @@ class IMO_DCS_App(tk.Tk):
             self.message_box(msg)
             dcs_bdn_errors.append(msg)
 
-        '''
+
         try:
             ## Check if non-negative in columns
-            for index, row in df.iterrows():
-                temp_error_msgs = []
-                negative_val_colnames = []
-                if not (row.isnull().all()):
-                    for col_name in bdn_numeric_columns:
-                        if not self.is_NaT_NaN(row[col_name]) and self.is_numeric(row[col_name]):
-                            if not self.is_nonnegative(row[col_name]):  ## Check if the data is non-negative
-                                negative_val_colnames.append(col_name)
-                                self.fill_cell(df, index, col_name, error_yellow_fill, "IMO DCS BDN Summary")
-                if len(negative_val_colnames) > 0:
-                    temp_error_msgs.append("Negative Value in Column(s): {};"
-                                           .format(",".join(negative_val_colnames)))
-                temp_msg = (df.iloc[index]["Errors"]).split("\n")
-                temp_msg.extend(temp_error_msgs)
-                temp_msg = list(filter(None, temp_msg))
-                df.at[index, 'Errors'] = "\n".join(temp_msg)
-            msg = ("OK: Check if non-negative in columns")
-            msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
-            self.message_box(msg)
+            if dcs_bdn_flag:
+                for index, row in df.iterrows():
+                    temp_error_msgs = []
+                    negative_val_colnames = []
+                    if not (row.isnull().all()):
+                        for col_name in bdn_numeric_columns:
+                            if not self.is_NaT_NaN(row[col_name]) and self.is_numeric(row[col_name]):
+                                if not self.is_nonnegative(row[col_name]):  ## Check if the data is non-negative
+                                    negative_val_colnames.append(col_name)
+                                    self.fill_cell(df, index, col_name, error_yellow_fill, "IMO DCS BDN Summary")
+                    if len(negative_val_colnames) > 0:
+                        temp_error_msgs.append("Negative Value in Column(s): {};"
+                                               .format(",".join(negative_val_colnames)))
+                    temp_msg = (df.iloc[index]["Errors"]).split("\n")
+                    temp_msg.extend(temp_error_msgs)
+                    temp_msg = list(filter(None, temp_msg))
+                    df.at[index, 'Errors'] = "\n".join(temp_msg)
+                msg = ("OK: Check if non-negative in columns")
+                msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
+                self.message_box(msg)
         except:
             msg = ("Error: Check if non-negative in columns")
             msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
             self.message_box(msg)
-        '''
+
         try:
             ## Check for date format and empty date
             if dcs_bdn_flag:
@@ -788,7 +1052,7 @@ class IMO_DCS_App(tk.Tk):
                             start_year_date = rob_start_date_val
                         else:
                             temp_error_msgs.append("Error in ROB (Start) date. Default date of "
-                                                   "01-Jan-2020 will be used. Please check data;")
+                                                   "01-Jan will be used. Please check data;")
                             self.fill_cell(df, index, "Date (DD-Mmm-YYYY)*", error_yellow_fill, "IMO DCS BDN Summary")
 
                     if rob_start_cnt > 1 and (row["Entry Type*"] == "ROB (Start)"):
@@ -799,7 +1063,7 @@ class IMO_DCS_App(tk.Tk):
                         rob_end_date_val = row["Date (DD-Mmm-YYYY)*"]
                         if isinstance(rob_end_date_val, datetime) and (not self.is_NaT_NaN(rob_end_date_val)):
                             global end_year_date
-                            end_year_date = rob_end_date_val
+                            end_year_date = rob_end_date_val + timedelta(hours=23, minutes=59, seconds=59)
                             if EoY_flag:
                                 if end_year_date.day != 31 or end_year_date.month != 12:
                                     temp_error_msgs.append("'End of Year' selected but the ROB (End) is not 31-Dec. " \
@@ -809,13 +1073,13 @@ class IMO_DCS_App(tk.Tk):
 
                             if CoM_flag:
                                 if end_year_date.day == 31 and end_year_date.month == 12:
-                                    temp_error_msgs.append("'Change in Management / Chang in Flag' selected but "
-                                                           "the ROB (End) is 31-Dec-202x. Please check ROB (End) date")
+                                    temp_error_msgs.append("'Change in Management / Change in Flag' selected but "
+                                                           "the ROB (End) is 31-Dec. Please check ROB (End) date")
                                     self.fill_cell(df, index, "Date (DD-Mmm-YYYY)*", error_yellow_fill,
                                                    "IMO DCS BDN Summary")
                         else:
                             temp_error_msgs.append("Error in ROB (End) date. Default date of "
-                                                   "31-Dec-2020 will be used. Please check data;")
+                                                   "31-Dec will be used. Please check data;")
                             self.fill_cell(df, index, "Date (DD-Mmm-YYYY)*", error_yellow_fill, "IMO DCS BDN Summary")
 
                     if rob_end_cnt > 1 and (row["Entry Type*"] == "ROB (End)"):
@@ -975,7 +1239,7 @@ class IMO_DCS_App(tk.Tk):
         # sys.stdout = old_stdout
         # log_file.close()
 
-        ## ==============================================================================================================
+        ## =================================================================================================================
         ## For analysing IMO DCS Data
         msg = ("Analysis started for file: {} and sheet name {}".format(f_name, "IMO DCS Data"))
         msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
@@ -1088,19 +1352,19 @@ class IMO_DCS_App(tk.Tk):
                         if self.is_numeric(hrs_underway) and self.is_numeric(dst_travelled):
                             if hrs_underway > 0 and (dst_travelled == 0 or self.is_NaT_NaN(dst_travelled)):
                                 temp_error_msgs.append(
-                                    "'Distance Traveled' is zero while 'Hours Underway' is not. "
+                                    "'Distance Travelled' is zero while 'Hours Underway' is not. "
                                     "Please check your data;")
                                 self.fill_cell(df, index, "Distance Traveled (nm)*", error_yellow_fill, "IMO DCS Data")
                             elif (hrs_underway == 0 or self.is_NaT_NaN(hrs_underway)) and dst_travelled > 0:
                                 temp_error_msgs.append(
-                                    "'Hours Underway' is zero while 'Distance Traveled' is not. "
+                                    "'Hours Underway' is zero while 'Distance Travelled' is not. "
                                     "Please check your data;")
                                 self.fill_cell(df, index, "Hours Underway (h)*", error_yellow_fill, "IMO DCS Data")
                             if hrs_underway != 0 and dst_travelled != 0:
                                 if self.is_numeric(total_fuel):
                                     if total_fuel == 0 or self.is_NaT_NaN(total_fuel):
                                         temp_error_msgs.append(
-                                            "Total Fuel is zero while 'Distance Traveled/ Hours Underway' is not. "
+                                            "Total Fuel is zero while 'Distance Travelled/ Hours Underway' is not. "
                                             "Please check your data;")
                                         self.fill_cell(df, index, "Distance Traveled (nm)*", error_yellow_fill,
                                                        "IMO DCS Data")
@@ -1138,12 +1402,6 @@ class IMO_DCS_App(tk.Tk):
                                 temp_error_msgs.append(
                                     "When a value for “Other Emission Factor” is entered, "
                                     "a value for “Other Consumption” is to be entered."
-                                    "Please check your data;")
-                                self.fill_cell(df, index, "Other Emission Factor (MT CO2/MT fuel)", error_yellow_fill,
-                                               "IMO DCS Data")
-                            if other_emission < 0:
-                                temp_error_msgs.append(
-                                    "Negative value for “Other Emission Factor” is entered,"
                                     "Please check your data;")
                                 self.fill_cell(df, index, "Other Emission Factor (MT CO2/MT fuel)", error_yellow_fill,
                                                "IMO DCS Data")
@@ -1304,7 +1562,7 @@ class IMO_DCS_App(tk.Tk):
                         first_row_flag = False
                         if date_time_assert:
                             if self.date_format(start_date_value) != self.date_format(start_year_date):
-                                temp_error_msgs.append("Please create entries from {};".
+                                temp_error_msgs.append("Error in start date based on RoB (Start): {};".
                                                        format(self.date_format(start_year_date)))
                                 self.fill_cell(df, index, start_date_colname, error_yellow_fill, "IMO DCS Data")
                             prev_end_date_value = end_date_value
@@ -1316,21 +1574,25 @@ class IMO_DCS_App(tk.Tk):
                         if prev_date_assert:
                             missing_days_cnt = (start_date_value - prev_end_date_value)
                             missing_duration_in_s = missing_days_cnt.total_seconds()
-                            missing_days = divmod(missing_duration_in_s, 86400)[0]
-                            missing_hours = divmod(missing_duration_in_s, 3600)[0]
-                            missing_minutes = round(divmod(missing_duration_in_s, 60)[0],2)
-                            if (missing_minutes > 1):
+                            missing_days = missing_days_cnt.days
+                            missing_hours = (missing_days_cnt.seconds // 3600)
+                            missing_minutes = (missing_days_cnt.seconds // 60)
+                            missing_minutes = (missing_duration_in_s // 60) % (60*missing_minutes/abs(missing_minutes))
+                            tot_missing_minutes = round(divmod(missing_duration_in_s, 60)[0],2)
+                            if (tot_missing_minutes > 1):
                                 temp_error_msgs.append("The current row's voyage starting time is missing "
-                                                       "{} minutes from previous voyage. "
+                                                       "{} days, {} hours and {} minutes from previous voyage. "
                                                        "Please enter a valid start"
-                                                       "time;".format(missing_minutes))
+                                                       " time;".format(abs(missing_days), abs(missing_hours),
+                                                                      abs(missing_minutes)))
                                 self.fill_cell(df, index, start_date_colname, error_yellow_fill, "IMO DCS Data")
 
-                            elif (missing_minutes < 0):
-                                temp_error_msgs.append("This voyage overlaps with the previous voyage by {} minutes."
-                                                       "Please enter a date time that is later than the "
-                                                       "'end date and time' of the previous voyage."
-                                                       .format(abs(missing_minutes)))
+                            elif (tot_missing_minutes < 0):
+                                temp_error_msgs.append("The current row's voyage starting time is overlapping "
+                                                       "{} days, {} hours and {} minutes from previous voyage. "
+                                                       "Please enter a valid start"
+                                                       " time;".format(abs(missing_days), abs(missing_hours),
+                                                                      abs(missing_minutes)))
                                 self.fill_cell(df, index, start_date_colname, error_yellow_fill, "IMO DCS Data")
                             prev_end_date_value = end_date_value
                         else:
@@ -1339,6 +1601,17 @@ class IMO_DCS_App(tk.Tk):
                     else:
                         if isinstance(end_date_value, datetime):
                             prev_end_date_value = end_date_value
+
+                    if (len(df)-1)==index:
+                        if isinstance(end_date_value, datetime):
+                            last_row_end_timedelta = end_date_value - end_year_date
+                            last_missing_minutes = round(divmod(last_row_end_timedelta.total_seconds(), 60)[0], 2)
+                            if abs(last_missing_minutes) > 1:
+                                temp_error_msgs.append("Error in end date based on RoB (End): {};".
+                                                       format(self.date_format(end_year_date)))
+                                self.fill_cell(df, index, end_date_colname, error_yellow_fill, "IMO DCS Data")
+
+
 
                     temp_msg = (df.iloc[index]["Errors"]).split("\n")
                     temp_msg.extend(temp_error_msgs)
@@ -1400,9 +1673,8 @@ class IMO_DCS_App(tk.Tk):
                         continue
                 #print(sum_value)
                 df_analysis.loc['Sum Total Fuel', col] = round(sum_value, 2)
-            df_analysis['Program check on +/-5% acceptance'] = ((df_analysis['Aggregated fuel oil consumed'] -
-                                                                 df_analysis["Aggregated BDN Summary"]) /
-                                                                df_analysis['Aggregated BDN Summary']) * 100
+            df_analysis['Program check on +/-5% acceptance'] = ((df_analysis['Aggregated fuel oil consumed'] /
+                                                                df_analysis['Aggregated BDN Summary'])-1) * 100
             df_analysis["Predicted aggregated fuel oil consumed"] = ""
             df_analysis["% deviation of aggregated fuel oil consumption from prediction"] = ""
             for index, row in df_analysis.iterrows():  ## Limit to two decimals
@@ -1502,30 +1774,11 @@ class IMO_DCS_App(tk.Tk):
 
         ########################
 
-        ml_folder = "S:\\Hull\\2021 DCS MRV\\DCS\\ML Trained\\"
-        model = load_model(ml_folder + 'DCS model.h5')
-        scaler = joblib.load(ml_folder + "DCS_Scalar.save")
-        ##'total_distance','total_time','total_main','total_aux','GT','ship_type'
-        if len(ML_errors) == 0:
-            prediction_data = [dst_nm, hours_uw, me_power, ae_power, gt]
-            prediction_data.extend(ship_typ)
-            prediction_data = np.array(prediction_data)
-            prediction_data = scaler.transform(prediction_data.reshape(1, 17))
-            y_hat = model.predict(prediction_data)
-            y_hat = copy.deepcopy(round(y_hat[0][0], 2))
-            if df_critical_error == False:
-                df_analysis.at["Sum Total Fuel", 'Predicted aggregated fuel oil consumed'] = y_hat
-                df_analysis.at["Sum Total Fuel",
-                               "% deviation of aggregated fuel oil consumption from prediction"] = \
-                    round((df_analysis.loc["Sum Total Fuel", "Aggregated fuel oil consumed"] / y_hat) * 100, 2)
-
-        else:
-            ML_errors.append("Prediction error! Check data")
         ## Machine Learning Prediction
         try:
             ml_folder = "S:\\Hull\\2021 DCS MRV\\DCS\\ML Trained\\"
-            model = load_model(ml_folder+'DCS model.h5')
-            scaler = joblib.load(ml_folder+"DCS_Scalar.save")
+            model = load_model(ml_folder + 'DCS model.h5')
+            scaler = joblib.load(ml_folder + "DCS_Scalar.save")
             ##'total_distance','total_time','total_main','total_aux','GT','ship_type'
             if len(ML_errors) == 0:
                 prediction_data = [dst_nm, hours_uw, me_power, ae_power, gt]
@@ -1533,13 +1786,15 @@ class IMO_DCS_App(tk.Tk):
                 prediction_data = np.array(prediction_data)
                 prediction_data = scaler.transform(prediction_data.reshape(1, 17))
                 y_hat = model.predict(prediction_data)
-                y_hat =  copy.deepcopy(round(y_hat[0][0],2))
+                y_hat = copy.deepcopy(round(y_hat[0][0], 2))
                 if df_critical_error == False:
                     df_analysis.at["Sum Total Fuel", 'Predicted aggregated fuel oil consumed'] = y_hat
+                    max_fuel = max(df_analysis.loc["Sum Total Fuel", "Aggregated fuel oil consumed"],
+                                   df_analysis.loc["Sum Total Fuel", "Aggregated BDN Summary"])
                     df_analysis.at["Sum Total Fuel",
                                    "% deviation of aggregated fuel oil consumption from prediction"] = \
-                        round((df_analysis.loc["Sum Total Fuel", "Aggregated fuel oil consumed"] / y_hat) * 100,2)
-
+                        round(((max_fuel / y_hat) - 1) * 100, 2)
+                    #print(round(((max_fuel / y_hat) - 1) * 100, 2))
             else:
                 ML_errors.append("Prediction error! Check data")
         except:
@@ -1591,7 +1846,10 @@ class IMO_DCS_App(tk.Tk):
             for idx, row in enumerate(df_analysis.itertuples(index=False)):
                 temp_error_msgs = []
                 col_name = "Program check on +/-5% acceptance"
-                check_pct = row[2]
+                try:
+                    check_pct = float(row[2])
+                except:
+                    continue
                 if not self.is_NaT_NaN(check_pct):
                     if self.is_numeric(check_pct):  ## Check if the data is numeric
                         if abs(check_pct) > 5:
@@ -1680,7 +1938,6 @@ class IMO_DCS_App(tk.Tk):
         msg = ("Sampling data for file: {} and sheet name {}".format(f_name, "IMO DCS Data"))
         msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
         self.message_box(msg)
-        dcs_data_flag = False
         dcs_data_errors = []
         df = pd.DataFrame()
         filename = source_dir + "\\" + f_name
@@ -1690,12 +1947,12 @@ class IMO_DCS_App(tk.Tk):
             msg = ("OK: Importing sheet of IMO DCS Data")
             msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
             self.message_box(msg)
-            dcs_data_flag = True
+
         except:
             msg = ("Critical Error: Importing sheet of IMO DCS Data")
             msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
             self.message_box(msg)
-            dcs_data_flag = False
+
             dcs_data_errors.append(msg)
 
         if len(df) <= 12:
@@ -1717,7 +1974,8 @@ class IMO_DCS_App(tk.Tk):
         try:
             sheet_name = 'Program Checklist'
             ws = wb[sheet_name]
-            if abs(float(ws["F11"].value)) <= 5:
+            #print(abs(float(ws["F11"].value)))
+            if abs(float(ws["F11"].value)) <= 20:
                 sample_factor = 2
         except:
             msg = ("No ML value available! Default sampling selected!")
@@ -1734,11 +1992,13 @@ class IMO_DCS_App(tk.Tk):
 
         for index, row in sample_df.iterrows():
             try:
-                sample_df.at[index, start_date_name] = (datetime.strftime(row[start_date_name], "%d-%b-%Y  %I:%M:%S %p"))
+                sample_df[start_date_name] = sample_df[start_date_name].dt.strftime("%d-%b-%Y %H:%M")
+                #sample_df.at[index, start_date_name] = str((datetime.strftime(row[start_date_name], "%d-%b-%Y %H:%M")))
             except:
                 continue
             try:
-                sample_df.at[index, end_date_name] = (datetime.strftime(row[end_date_name], "%d-%b-%Y  %I:%M:%S %p"))
+                sample_df[end_date_name] = sample_df[end_date_name].dt.strftime("%d-%b-%Y %H:%M")
+                #sample_df.at[index, end_date_name] = (datetime.strftime(row[end_date_name], "%d-%b-%Y  %I:%M:%S %p"))
             except:
                 continue
         sample_df.sort_index(inplace=True)
@@ -1776,34 +2036,242 @@ class IMO_DCS_App(tk.Tk):
         col_names = ["ReportingStartDate", "ReportingEndDate", "ShipFlag", "ShipIMONumber", "ShipType",
                      "ShipTypeOther", "ShipGrossTonnage", "ShipNetTonnage", "ShipDeadweight",
                      "ShipMainPropulsionPowers", "ShipAuxiliaryEnginesPowers", "ShipEEDI", "ShipIceClass",
-                     "DistanceTravelled", "HoursUnderway"]
+                     "DistanceTravelled", "HoursUnderway", "ConsumptionData1", "ConsumptionData2", "ConsumptionData3",
+                     "ConsumptionData4", "ConsumptionData5", "ConsumptionData6", "ConsumptionData7", "ConsumptionData8",
+                     "ConsumptionData9"]
         df = pd.DataFrame(columns=col_names)
-        try:
-            for f_name in files:
+        unsuccess = pd.DataFrame(columns=["Unsuccess"])
+        errors_GISIS = pd.DataFrame(columns=["Reference","Errors"])
+
+        for f_name in files:
+            try:
                 filename = source_dir + "\\" + f_name
                 w_book = openpyxl.load_workbook(filename, data_only=True)
                 all_values = []
-                all_values.append(w_book['IMO DCS BDN Summary']["B8"].value)  # "ReportingStartDate"
-                all_values.append(w_book['IMO DCS BDN Summary']["B9"].value)  # "ReportingEndDate"
-                all_values.append(w_book['Vessel Details']["B9"].value)  # ShipFlag
-                all_values.append(w_book['Vessel Details']["B5"].value)  # IMO Number
-                all_values.append(w_book['Vessel Details']["B7"].value)  # ShipType
-                all_values.append(w_book['Vessel Details']["B8"].value)  # ShipTypeOther
-                all_values.append(w_book['Vessel Details']["B12"].value)  # ShipGrossTonnage
-                all_values.append(w_book['Vessel Details']["B13"].value)  # ShipNetTonnage
-                all_values.append(w_book['Vessel Details']["B14"].value)  # ShipDeadweight
-                all_values.append(w_book['Vessel Details']["B15"].value)  # ShipMainPropulsionPowers
-                all_values.append(w_book['Vessel Details']["B16"].value)  # ShipAuxiliaryEnginesPowers
-                all_values.append(w_book['Vessel Details']["B17"].value)  # ShipEEDI
-                all_values.append(w_book['Vessel Details']["B18"].value)  # ShipIceClass
-                all_values.append(w_book['IMO DCS Data']["D6"].value)  # DistanceTravelled
-                all_values.append(w_book['IMO DCS Data']["C6"].value)  # HoursUnderway
+                error_messages = []
+                try:
+                    all_values.append(w_book['IMO DCS BDN Summary']["B8"].value)  # "ReportingStartDate"
+                except:
+                    error_messages.append("Error in ReportingStartDate")
+                    all_values.append("")
+                try:
+                    all_values.append(w_book['IMO DCS BDN Summary']["B9"].value)  # "ReportingEndDate"
+                except:
+                    error_messages.append("Error in ReportingEndDate")
+                    all_values.append("")
+                try:
+                    ship_flag = w_book['Vessel Details']["B9"].value
+                    ship_flag_code = [val for key, val in country_codes.items() if ship_flag.lower() in key.lower()]
+                    if len(ship_flag_code) == 1:
+                        all_values.append(ship_flag_code[0])  # ShipFlag
+                    else:
+                        raise
+                except:
+                    error_messages.append("Error in ship flag code.")
+                    all_values.append("")
+                try:
+                    IMONumber = w_book['Vessel Details']["B5"].value # IMO Number
+                    if len(str(IMONumber)) == 7:
+                        all_values.append(IMONumber)
+                    else:
+                        raise
+                except:
+                    error_messages.append("Error in IMO Number.")
+                    all_values.append("")
+                try:
+                    ShipType = (w_book['Vessel Details']["B7"].value).replace(" ", "") # ShipType
+                    IMO_ShipType = ["BulkCarrier", "GasCarrier", "Tanker", "Containership", "GeneralCargoShip",
+                                    "RefrigeratedCargoCarrier", "CombinationCarrier", "PassengerShip",
+                                    "RoRoCargoShipVehicleCarrier", "RoRoCargoShip", "RoRoPassengerShip", "LNGCarrier",
+                                    "CruisePassengerShip", "Other"]
+                    shiptype_matched = [s for s in IMO_ShipType if (ShipType.lower() in s.lower() or s.lower() in ShipType.lower())]
+                    if len(shiptype_matched) == 1:
+                        all_values.append(shiptype_matched[0])
+                    else:
+                        raise
+                except:
+                    error_messages.append("Error in Ship Type")
+                    all_values.append("")
+                try:
+                    ShipTypeOther = w_book['Vessel Details']["B8"].value # ShipTypeOther
+                    if shiptype_matched[0] == "Other":
+                        if ShipTypeOther == "" or ShipTypeOther is None:
+                            raise
+                        else:
+                            all_values.append(ShipTypeOther)
+                    else:
+                        all_values.append(ShipTypeOther)
+                except:
+                    error_messages.append("Error in Ship type other")
+                    all_values.append("")
+                try:
+                    ShipGrossTonnage = w_book['Vessel Details']["B12"].value  # ShipGrossTonnage
+                    if float(ShipGrossTonnage) >=5000:
+                        all_values.append(int(ShipGrossTonnage))
+                    else:
+                        raise
+                except:
+                    error_messages.append("Error in Ship Gross Tonnage")
+                    all_values.append("")
+                try:
+                    ShipNetTonnage = w_book['Vessel Details']["B13"].value # ShipNetTonnage
+                    if float(ShipNetTonnage) > 0:
+                        all_values.append(int(ShipNetTonnage))
+                    else:
+                        raise
+                except:
+                    error_messages.append("Error in ship net tonnage")
+                    all_values.append("")
+                try:
+                    ShipDeadweight = w_book['Vessel Details']["B14"].value # ShipDeadweight
+                    if float(ShipDeadweight) > 0:
+                        all_values.append(int(ShipDeadweight))
+                    else:
+                        raise
+                except:
+                    error_messages.append("Error in ship dead weight")
+                    all_values.append("")
+                try:
+                    all_values.append(w_book['Vessel Details']["B15"].value)  # ShipMainPropulsionPowers
+                except:
+                    error_messages.append("Error in ship main propulsion power")
+                    all_values.append("")
+                try:
+                    all_values.append(w_book['Vessel Details']["B16"].value)  # ShipAuxiliaryEnginesPowers
+                except:
+                    error_messages.append("Error in ship auxiliary engine power")
+                    all_values.append("")
+                try:
+                    ShipEEDI = w_book['Vessel Details']["B17"].value
+                    if float(ShipEEDI) >= 0:
+                        all_values.append(ShipEEDI)  # ShipEEDI
+                except:
+                    error_messages.append("Error in ShipEEDI")
+                    all_values.append("")
+                try:
+                    all_values.append(w_book['Vessel Details']["B18"].value)  # ShipIceClass
+                except:
+                    error_messages.append("Error in Ship Ice Class")
+                    all_values.append("")
+                try:
+                    DistanceTravelled = w_book['IMO DCS Data']["D6"].value # DistanceTravelled
+                    if float(DistanceTravelled) > 0:
+                        all_values.append(int(DistanceTravelled))
+                    else:
+                        raise
+                except:
+                    error_messages.append("Error in Distance travelled (Cell D6)")
+                    all_values.append("")
+                try:
+                    HoursUnderway = w_book['IMO DCS Data']["C6"].value # HoursUnderway
+                    if float(HoursUnderway) > 0:
+                        all_values.append(int(HoursUnderway))
+                    else:
+                        raise
+                except:
+                    error_messages.append("Error in Hours underway (Cell C6)")
+                    all_values.append("")
+                try:
+                    cm = (w_book['Vessel Details']["B19"].value).replace(" ", "")
+                    IMO_methods = ["BDN", "FlowMeter", "BunkerTankMonitoring"]
+                    collect_method = [s for s in IMO_methods if s.lower() in cm.lower()]
+                    collect_method = collect_method[0]
+                except:
+                    error_messages.append("Error in collection method")
+                    all_values.append("")
+                temp_list = []
+                if float(w_book['IMO DCS Data']["E6"].value) > 0:
+                    temp_list.append(round(float(w_book['IMO DCS Data']["E6"].value), 2))
+                    temp_list.append("HeavyFuel")
+                    temp_list.append("")
+                    temp_list.append(3.114)
+                    temp_list.append(collect_method)
+                    all_values.append((','.join(str(v) for v in temp_list)))
+                temp_list = []
+                if float(w_book['IMO DCS Data']["F6"].value) > 0:
+                    temp_list.append(round(float(w_book['IMO DCS Data']["F6"].value), 2))
+                    temp_list.append("LightFuel")
+                    temp_list.append("")
+                    temp_list.append(3.151)
+                    temp_list.append(collect_method)
+                    all_values.append((','.join(str(v) for v in temp_list)))
+                temp_list = []
+                if float(w_book['IMO DCS Data']["G6"].value) > 0:
+                    temp_list.append(round(float(w_book['IMO DCS Data']["G6"].value), 2))
+                    temp_list.append("DieselGasOil")
+                    temp_list.append("")
+                    temp_list.append(3.206)
+                    temp_list.append(collect_method)
+                    all_values.append((','.join(str(v) for v in temp_list)))
+                temp_list = []
+                if float(w_book['IMO DCS Data']["H6"].value) > 0:
+                    temp_list.append(round(float(w_book['IMO DCS Data']["H6"].value),2))
+                    temp_list.append("LPGPropane")
+                    temp_list.append("")
+                    temp_list.append(3.000)
+                    temp_list.append(collect_method)
+                    all_values.append((','.join(str(v) for v in temp_list)))
+                temp_list = []
+                if float(w_book['IMO DCS Data']["I6"].value) > 0:
+                    temp_list.append(round(float(w_book['IMO DCS Data']["I6"].value), 2))
+                    temp_list.append("LPGButane")
+                    temp_list.append("")
+                    temp_list.append(3.030)
+                    temp_list.append(collect_method)
+                    all_values.append((','.join(str(v) for v in temp_list)))
+                temp_list = []
+                if float(w_book['IMO DCS Data']["J6"].value) > 0:
+                    temp_list.append(round(float(w_book['IMO DCS Data']["J6"].value), 2))
+                    temp_list.append("LNG")
+                    temp_list.append("")
+                    temp_list.append(2.750)
+                    temp_list.append(collect_method)
+                    all_values.append((','.join(str(v) for v in temp_list)))
+                temp_list = []
+                if float(w_book['IMO DCS Data']["K6"].value) > 0:
+                    temp_list.append(round(float(w_book['IMO DCS Data']["K6"].value),2))
+                    temp_list.append("Methanol")
+                    temp_list.append("")
+                    temp_list.append(1.375)
+                    temp_list.append(collect_method)
+                    all_values.append((','.join(str(v) for v in temp_list)))
+                temp_list = []
+                if float(w_book['IMO DCS Data']["L6"].value) > 0:
+                    temp_list.append(round(float(w_book['IMO DCS Data']["L6"].value),2))
+                    temp_list.append("Ethanol")
+                    temp_list.append("")
+                    temp_list.append(1.913)
+                    temp_list.append(collect_method)
+                    all_values.append((','.join(str(v) for v in temp_list)))
+                temp_list = []
+                if float(w_book['IMO DCS Data']["M6"].value) > 0:
+                    temp_list.append(round(float(w_book['IMO DCS Data']["M6"].value),2))
+                    temp_list.append("Other")
+                    temp_list.append("OtherFuelType")
+                    temp_list.append(1)
+                    temp_list.append(collect_method)
+                    all_values.append((','.join(str(v) for v in temp_list)))
+
+                while (len(all_values) != len(col_names)):
+                    all_values.append("")
+                df.loc[len(df)] = all_values
+                errors_GISIS.loc[len(df), "Reference"] = len(df)
+                errors_GISIS.loc[len(df), "Errors"] = ";\n".join(error_messages)
+            except:
+                unsuccess.loc[len(unsuccess)] = f_name
+
+        df.index += 1
+        df.index.name = "ReferenceCode"
+        # Creating Excel Writer Object from Pandas
+        writer = pd.ExcelWriter(source_dir + "\\" + 'Output_GISIS_data_xml.xlsx', engine='xlsxwriter')
+        workbook = writer.book
+        df.to_excel(writer, sheet_name='GISIS Data', startrow=0, startcol=0)
+        unsuccess.to_excel(writer, sheet_name='Unsuccessful files', startrow=0, startcol=0)
+        errors_GISIS.to_excel(writer, sheet_name='Errors', startrow=0, startcol=0)
+        writer.save()
 
 
-        except:
-            print("Error in loading worksheet")
-
-        msg = ("To code for GISIS data extraction")
+        msg = ("GISIS data generated for generating xml")
         msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
         self.message_box(msg)
 
@@ -1811,9 +2279,9 @@ class IMO_DCS_App(tk.Tk):
         files = file_names
         for f_name in files:
             ## Logger
-            orig_stdout = sys.stdout
-            log_file = open(destination_dir + "\\" + "log_" + f_name + ".log", 'w')
-            sys.stdout = log_file
+            #orig_stdout = sys.stdout
+            #log_file = open(destination_dir + "\\" + "log_" + f_name + ".log", 'w')
+            #sys.stdout = log_file
             filename = source_dir + "\\" + f_name
             ## Import file
             try:
@@ -1835,8 +2303,8 @@ class IMO_DCS_App(tk.Tk):
             if self.sampling.get():
                 self.sampling_data(source_dir, f_name)
 
-            sys.stdout = orig_stdout
-            log_file.close()
+            #sys.stdout = orig_stdout
+            #log_file.close()
 
             try:
                 for sheet_name in wb.sheetnames:  # to check whether sheet you need already exists
