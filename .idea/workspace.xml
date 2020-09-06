@@ -21,8 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d200e680-2d2b-4079-9386-1f2c35248d95" name="Default Changelist" comment="Working on GISIS data format">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI Version.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI Version.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
