@@ -15,6 +15,10 @@ from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection
 from openpyxl.utils.dataframe import dataframe_to_rows
 import joblib
 from tensorflow.keras.models import load_model
+from collections import OrderedDict
+from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2.generic import BooleanObject, NameObject, IndirectObject
+from pprint import pprint
 ## Global Variables
 global country_codes ## ISO3166, Alpha 3
 country_codes = {'Afghanistan':'AFG',
@@ -408,10 +412,20 @@ class IMO_DCS_App(tk.Tk):
         self.GISIS = tk.IntVar(self)
         self.cbox3 = tk.Checkbutton(top_frame, text="GISIS Data-Gen",
                                     variable=self.GISIS, bg='grey', state=NORMAL, command=self.disable_mistatement_sampling)
-        self.cbox3.grid(row=3, column=0, padx=5, pady=5, sticky='w')
+        self.cbox3.grid(row=2, column=2, padx=5, pady=5, sticky='w')
+
+        self.SOC = tk.IntVar(self)
+        self.cbox4 = tk.Checkbutton(top_frame, text="SoC Gen",
+                                    variable=self.SOC, bg='grey', state=NORMAL, command=self.disable_mis_GISIS)
+        self.cbox4.grid(row=3, column=0, padx=5, pady=5, sticky='w')
+
+        self.RR = tk.IntVar(self)
+        self.cbox5 = tk.Checkbutton(top_frame, text="RR Gen",
+                                    variable=self.RR, bg='grey', state=NORMAL, command=self.disable_mis_GISIS)
+        self.cbox5.grid(row=3, column=1, padx=5, pady=5, sticky='w' + 'e' + 'n' + 's')
 
         self.btn_Start = ttk.Button(top_frame, text="Start", command=self.begin)
-        self.btn_Start.grid(row=2, column=2, padx=5, pady=5, sticky='w' + 'e' + 'n' + 's')
+        self.btn_Start.grid(row=3, column=2, padx=5, pady=5, sticky=  'n' + 's')
 
         bottom_frame = tk.Frame(self, bg='grey')
         bottom_frame.pack(side=BOTTOM)
@@ -428,16 +442,33 @@ class IMO_DCS_App(tk.Tk):
         if self.GISIS.get():
             self.cbox1.config(state=DISABLED)
             self.cbox2.config(state=DISABLED)
+            self.cbox4.config(state=DISABLED)
+            self.cbox5.config(state=DISABLED)
         else:
             self.cbox1.config(state=NORMAL)
             self.cbox2.config(state=NORMAL)
+            self.cbox4.config(state=NORMAL)
+            self.cbox5.config(state=NORMAL)
 
     def disable_GISIS(self):
         if self.mistatement.get() or self.sampling.get():
             self.cbox3.config(state=DISABLED)
+            self.cbox4.config(state=DISABLED)
+            self.cbox5.config(state=DISABLED)
         else:
             self.cbox3.config(state=NORMAL)
+            self.cbox4.config(state=NORMAL)
+            self.cbox5.config(state=NORMAL)
 
+    def disable_mis_GISIS(self):
+        if self.SOC.get() or self.RR.get():
+            self.cbox1.config(state=DISABLED)
+            self.cbox2.config(state=DISABLED)
+            self.cbox3.config(state=DISABLED)
+        else:
+            self.cbox1.config(state=NORMAL)
+            self.cbox2.config(state=NORMAL)
+            self.cbox3.config(state=NORMAL)
 
     def begin(self):
         '''start a thread and connect it to func'''
@@ -608,7 +639,8 @@ class IMO_DCS_App(tk.Tk):
             msg = ("OK: The selected folder contains files: \n{}".format(";\n".join(files)))
             msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
             self.message_box(msg)
-            if (not self.sampling.get()) and (not self.mistatement.get()) and (not self.GISIS.get()):
+            if (not self.sampling.get()) and (not self.mistatement.get()) and (not self.GISIS.get())\
+                    and (not self.SOC.get()) and (not self.RR.get()):
                 msg = ("Error: Please select one of the check box")
                 msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
                 self.message_box(msg)
@@ -2032,14 +2064,22 @@ class IMO_DCS_App(tk.Tk):
 
     def make_GISIS_xlsx(self, source_dir, destination_dir, file_names):
         ## ==============================================================================================================
+        msg = ("GISIS data extraction started")
+        msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
+        self.message_box(msg)
         files = file_names
-        col_names = ["ReportingStartDate", "ReportingEndDate", "ShipFlag", "ShipIMONumber", "ShipType",
+        col_names_gisis = ["ReportingStartDate", "ReportingEndDate", "ShipFlag", "ShipIMONumber", "ShipType",
                      "ShipTypeOther", "ShipGrossTonnage", "ShipNetTonnage", "ShipDeadweight",
                      "ShipMainPropulsionPowers", "ShipAuxiliaryEnginesPowers", "ShipEEDI", "ShipIceClass",
                      "DistanceTravelled", "HoursUnderway", "ConsumptionData1", "ConsumptionData2", "ConsumptionData3",
                      "ConsumptionData4", "ConsumptionData5", "ConsumptionData6", "ConsumptionData7", "ConsumptionData8",
                      "ConsumptionData9"]
-        df = pd.DataFrame(columns=col_names)
+        col_names_soc = ['date1', 'date2', 'date3', 'date4', 'date5', 'date of issue', 'Name of Ship',
+                        'Distinctive number or letters', 'IMO number', 'Port of registry', 'Gross tonnage',
+                        'place of issue of Statement', 'signature of duly authorized official issuing the statement',
+                        'Title', 'full designation of the Party', 'Certificate Number']
+        df = pd.DataFrame(columns=col_names_gisis)
+        df_soc = pd.DataFrame(columns=col_names_soc)
         unsuccess = pd.DataFrame(columns=["Unsuccess"])
         errors_GISIS = pd.DataFrame(columns=["Reference","Errors"])
 
@@ -2049,6 +2089,7 @@ class IMO_DCS_App(tk.Tk):
                 w_book = openpyxl.load_workbook(filename, data_only=True)
                 all_values = []
                 error_messages = []
+                soc_dict = {i: "" for i in col_names_soc}
                 try:
                     all_values.append(w_book['IMO DCS BDN Summary']["B8"].value)  # "ReportingStartDate"
                 except:
@@ -2060,10 +2101,12 @@ class IMO_DCS_App(tk.Tk):
                     error_messages.append("Error in ReportingEndDate")
                     all_values.append("")
                 try:
-                    ship_flag = w_book['Vessel Details']["B9"].value
+                    ship_flag = w_book['Vessel Details']["B9"].value # ShipFlag
                     ship_flag_code = [val for key, val in country_codes.items() if ship_flag.lower() in key.lower()]
                     if len(ship_flag_code) == 1:
-                        all_values.append(ship_flag_code[0])  # ShipFlag
+                        all_values.append(ship_flag_code[0])
+                        soc_dict["full designation of the Party"] = \
+                            list(country_codes.keys())[list(country_codes.values()).index(ship_flag_code[0])]
                     else:
                         raise
                 except:
@@ -2073,6 +2116,7 @@ class IMO_DCS_App(tk.Tk):
                     IMONumber = w_book['Vessel Details']["B5"].value # IMO Number
                     if len(str(IMONumber)) == 7:
                         all_values.append(IMONumber)
+                        soc_dict["IMO number"] = IMONumber
                     else:
                         raise
                 except:
@@ -2108,6 +2152,7 @@ class IMO_DCS_App(tk.Tk):
                     ShipGrossTonnage = w_book['Vessel Details']["B12"].value  # ShipGrossTonnage
                     if float(ShipGrossTonnage) >=5000:
                         all_values.append(int(ShipGrossTonnage))
+                        soc_dict["Gross tonnage"] = int(ShipGrossTonnage)
                     else:
                         raise
                 except:
@@ -2252,9 +2297,13 @@ class IMO_DCS_App(tk.Tk):
                     temp_list.append(collect_method)
                     all_values.append((','.join(str(v) for v in temp_list)))
 
-                while (len(all_values) != len(col_names)):
+                while (len(all_values) != len(col_names_gisis)):
                     all_values.append("")
+                soc_dict["Port of registry"] = w_book['Vessel Details']["B10"].value
+                soc_dict["Name of Ship"] = w_book['Vessel Details']["B6"].value
                 df.loc[len(df)] = all_values
+                df_soc = df_soc.append(soc_dict, ignore_index=True)
+                print(df_soc)
                 errors_GISIS.loc[len(df), "Reference"] = len(df)
                 errors_GISIS.loc[len(df), "Errors"] = ";\n".join(error_messages)
             except:
@@ -2262,14 +2311,16 @@ class IMO_DCS_App(tk.Tk):
 
         df.index += 1
         df.index.name = "ReferenceCode"
+        df_soc.index +=1
+        df_soc.index.name = "ReferenceCode"
         # Creating Excel Writer Object from Pandas
-        writer = pd.ExcelWriter(source_dir + "\\" + 'Output_GISIS_data_xml.xlsx', engine='xlsxwriter')
+        writer = pd.ExcelWriter(destination_dir + "\\" + 'Output_GISIS_data_xml.xlsx', engine='xlsxwriter')
         workbook = writer.book
         df.to_excel(writer, sheet_name='GISIS Data', startrow=0, startcol=0)
         unsuccess.to_excel(writer, sheet_name='Unsuccessful files', startrow=0, startcol=0)
         errors_GISIS.to_excel(writer, sheet_name='Errors', startrow=0, startcol=0)
+        df_soc.to_excel(writer, sheet_name = "SoC Data", startrow=0, startcol=0)
         writer.save()
-
 
         msg = ("GISIS data generated for generating xml")
         msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
@@ -2320,6 +2371,112 @@ class IMO_DCS_App(tk.Tk):
                 msg = ("Error: Save file {}. Please check if the file is open".format(f_name))
                 msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
                 self.message_box(msg)
+    ##### Code for SOC Generation
+    def _getFields(self, obj, tree=None, retval=None, fileobj=None):
+        fieldAttributes = {'/FT': 'Field Type', '/Parent': 'Parent', '/T': 'Field Name', '/TU': 'Alternate Field Name',
+                           '/TM': 'Mapping Name', '/Ff': 'Field Flags', '/V': 'Value', '/DV': 'Default Value'}
+        if retval is None:
+            retval = OrderedDict()
+            catalog = obj.trailer["/Root"]
+            # get the AcroForm tree
+            if "/AcroForm" in catalog:
+                tree = catalog["/AcroForm"]
+            else:
+                return None
+        if tree is None:
+            return retval
+
+        obj._checkKids(tree, retval, fileobj)
+        for attr in fieldAttributes:
+            if attr in tree:
+                # Tree is a field
+                obj._buildField(tree, retval, fileobj, fieldAttributes)
+                break
+
+        if "/Fields" in tree:
+            fields = tree["/Fields"]
+            for f in fields:
+                field = f.getObject()
+                obj._buildField(field, retval, fileobj, fieldAttributes)
+
+        return retval
+
+    def get_form_fields(self, infile):
+        infile = PdfFileReader(open(infile, 'rb'))
+        fields = self._getFields(infile)
+        return OrderedDict((k, v.get('/V', '')) for k, v in fields.items())
+
+    def set_need_appearances_writer(self, writer):
+        # See 12.7.2 and 7.7.2 for more information:
+        # http://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/PDF32000_2008.pdf
+        try:
+            catalog = writer._root_object
+            # get the AcroForm tree and add "/NeedAppearances attribute
+            if "/AcroForm" not in catalog:
+                writer._root_object.update({
+                    NameObject("/AcroForm"): IndirectObject(len(writer._objects), 0, writer)})
+
+            need_appearances = NameObject("/NeedAppearances")
+            writer._root_object["/AcroForm"][need_appearances] = BooleanObject(True)
+            return writer
+
+        except Exception as e:
+            print('set_need_appearances_writer() catch : ', repr(e))
+            return writer
+
+    def make_SOC_RR(self,source_dir, destination_dir):
+
+        if self.SOC.get():
+            msg = ("SOC Generation started!")
+            msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
+            self.message_box(msg)
+            try:
+                filename = source_dir + "\\" + "Output_GISIS_data_xml.xlsx"
+                df_soc = pd.read_excel(filename, sheet_name="SoC Data")
+                soc_flag = 1
+            except:
+                msg = ("Error: Missing file Output_GISIS_data_xml.xlsx or sheet 'SoC Data'")
+                msg = (str(datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")) + " " + msg)
+                self.message_box(msg)
+                soc_flag = 0
+
+            if soc_flag:
+                df_doc_dict = df_soc.to_dict(orient='records')
+                for dict_item in df_doc_dict:
+                    infile = 'SOC_Template.pdf'
+
+                    pprint(self.get_form_fields(infile))
+
+                    inputStream = open(infile, "rb")
+                    pdf_reader = PdfFileReader(inputStream, strict=False)
+                    if "/AcroForm" in pdf_reader.trailer["/Root"]:
+                        pdf_reader.trailer["/Root"]["/AcroForm"].update(
+                            {NameObject("/NeedAppearances"): BooleanObject(True)})
+
+                    pdf_writer = PdfFileWriter()
+                    self.set_need_appearances_writer(pdf_writer)
+                    if "/AcroForm" in pdf_writer._root_object:
+                        pdf_writer._root_object["/AcroForm"].update(
+                            {NameObject("/NeedAppearances"): BooleanObject(True)})
+
+                    field_dictionary = dict_item
+                    for key, val in field_dictionary.items():
+                        try:
+                            if math.isnan(val):
+                                field_dictionary[key] = ""
+                        except:
+                            continue
+
+                    pdf_writer.addPage(pdf_reader.getPage(0))
+                    pdf_writer.updatePageFormFieldValues(pdf_writer.getPage(0), field_dictionary)
+                    out_filename = field_dictionary["Name of Ship"]
+                    outputStream = open(destination_dir +"\\"+out_filename+".pdf", "wb")
+                    pdf_writer.write(outputStream)
+
+                    inputStream.close()
+                    outputStream.close()
+            else:
+                return
 
 
     def main_program(self, s_dir, d_dir, file_names):
@@ -2332,6 +2489,9 @@ class IMO_DCS_App(tk.Tk):
 
         if self.GISIS.get():
             self.make_GISIS_xlsx(source_dir=source_dir,destination_dir=destination_dir, file_names=files)
+
+        if self.SOC.get() or self.RR.get():
+            self.make_SOC_RR(source_dir=source_dir,destination_dir=destination_dir)
 
 
         self.btn_Start.config(state=tk.NORMAL)

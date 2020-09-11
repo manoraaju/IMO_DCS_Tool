@@ -19,8 +19,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d200e680-2d2b-4079-9386-1f2c35248d95" name="Default Changelist" comment="Working on GISIS data format">
+    <list default="true" id="d200e680-2d2b-4079-9386-1f2c35248d95" name="Default Changelist" comment="Updated Tool with GISIS data validation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI Version.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI Version.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,7 +122,14 @@
       <option name="project" value="LOCAL" />
       <updated>1598631015968</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Updated Tool with GISIS data validation">
+      <created>1599388877282</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1599388877282</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -138,7 +146,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Working on GISIS data format" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working on GISIS data format" />
+    <MESSAGE value="Updated Tool with GISIS data validation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated Tool with GISIS data validation" />
   </component>
   <component name="WindowStateProjectService">
     <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1597842997823">
@@ -153,71 +162,71 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="391" y="38" key="Github.UntrackedFilesDialog/0.0.1280.680@0.0.1280.680" timestamp="1598368927064" />
-    <state width="1259" height="85" key="GridCell.Tab.0.bottom" timestamp="1599069458054">
+    <state width="1259" height="125" key="GridCell.Tab.0.bottom" timestamp="1599581215606">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="85" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1599069458054" />
-    <state width="1259" height="85" key="GridCell.Tab.0.center" timestamp="1599069458054">
+    <state width="1259" height="125" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1599581215606" />
+    <state width="1259" height="125" key="GridCell.Tab.0.center" timestamp="1599581215606">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="85" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1599069458054" />
-    <state width="1259" height="85" key="GridCell.Tab.0.left" timestamp="1599069458054">
+    <state width="1259" height="125" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1599581215606" />
+    <state width="1259" height="125" key="GridCell.Tab.0.left" timestamp="1599581215606">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="85" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1599069458054" />
-    <state width="1259" height="85" key="GridCell.Tab.0.right" timestamp="1599069458054">
+    <state width="1259" height="125" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1599581215606" />
+    <state width="1259" height="125" key="GridCell.Tab.0.right" timestamp="1599581215606">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="85" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1599069458054" />
-    <state width="1259" height="85" key="GridCell.Tab.1.bottom" timestamp="1599069471720">
+    <state width="1259" height="125" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1599581215606" />
+    <state width="1259" height="125" key="GridCell.Tab.1.bottom" timestamp="1599581215606">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="85" key="GridCell.Tab.1.bottom/0.0.1280.680@0.0.1280.680" timestamp="1599069471720" />
-    <state width="1259" height="85" key="GridCell.Tab.1.center" timestamp="1599069471720">
+    <state width="1259" height="125" key="GridCell.Tab.1.bottom/0.0.1280.680@0.0.1280.680" timestamp="1599581215606" />
+    <state width="1259" height="125" key="GridCell.Tab.1.center" timestamp="1599581215606">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="85" key="GridCell.Tab.1.center/0.0.1280.680@0.0.1280.680" timestamp="1599069471720" />
-    <state width="1259" height="85" key="GridCell.Tab.1.left" timestamp="1599069471720">
+    <state width="1259" height="125" key="GridCell.Tab.1.center/0.0.1280.680@0.0.1280.680" timestamp="1599581215606" />
+    <state width="1259" height="125" key="GridCell.Tab.1.left" timestamp="1599581215606">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="85" key="GridCell.Tab.1.left/0.0.1280.680@0.0.1280.680" timestamp="1599069471720" />
-    <state width="1259" height="85" key="GridCell.Tab.1.right" timestamp="1599069471720">
+    <state width="1259" height="125" key="GridCell.Tab.1.left/0.0.1280.680@0.0.1280.680" timestamp="1599581215606" />
+    <state width="1259" height="125" key="GridCell.Tab.1.right" timestamp="1599581215606">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="85" key="GridCell.Tab.1.right/0.0.1280.680@0.0.1280.680" timestamp="1599069471720" />
+    <state width="1259" height="125" key="GridCell.Tab.1.right/0.0.1280.680@0.0.1280.680" timestamp="1599581215606" />
     <state x="142" y="0" key="SettingsEditor" timestamp="1598247484031">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="142" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1598247484031" />
-    <state x="233" y="73" key="Vcs.Push.Dialog.v2" timestamp="1598631027857">
+    <state x="233" y="73" key="Vcs.Push.Dialog.v2" timestamp="1599388890944">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="233" y="73" key="Vcs.Push.Dialog.v2/0.0.1280.680@0.0.1280.680" timestamp="1598631027857" />
-    <state width="647" height="347" key="XDebugger.FullValuePopup" timestamp="1599068396925">
+    <state x="233" y="73" key="Vcs.Push.Dialog.v2/0.0.1280.680@0.0.1280.680" timestamp="1599388890944" />
+    <state width="647" height="347" key="XDebugger.FullValuePopup" timestamp="1599581126569">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="647" height="347" key="XDebugger.FullValuePopup/0.0.1280.680@0.0.1280.680" timestamp="1599068396925" />
-    <state x="303" y="1" width="672" height="678" key="search.everywhere.popup" timestamp="1599066814608">
+    <state width="647" height="347" key="XDebugger.FullValuePopup/0.0.1280.680@0.0.1280.680" timestamp="1599581126569" />
+    <state x="303" y="1" width="672" height="678" key="search.everywhere.popup" timestamp="1599579033188">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="303" y="1" width="672" height="678" key="search.everywhere.popup/0.0.1280.680@0.0.1280.680" timestamp="1599066814608" />
+    <state x="303" y="1" width="672" height="678" key="search.everywhere.popup/0.0.1280.680@0.0.1280.680" timestamp="1599579033188" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/GUI Version.py</url>
-          <line>1837</line>
+          <line>1869</line>
           <option name="timeStamp" value="138" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/GUI Version.py</url>
-          <line>1114</line>
+          <line>1146</line>
           <option name="timeStamp" value="169" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/GUI Version.py</url>
-          <line>2262</line>
+          <line>2311</line>
           <option name="timeStamp" value="189" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -242,18 +251,33 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/GUI Version.py</url>
-          <line>1977</line>
+          <line>2009</line>
           <option name="timeStamp" value="227" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/GUI Version.py</url>
-          <line>1805</line>
+          <line>1837</line>
           <option name="timeStamp" value="229" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/GUI Version.py</url>
-          <line>2096</line>
-          <option name="timeStamp" value="235" />
+          <line>2304</line>
+          <option name="timeStamp" value="239" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/GUI Version.py</url>
+          <line>2443</line>
+          <option name="timeStamp" value="240" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/GUI Version.py</url>
+          <line>2434</line>
+          <option name="timeStamp" value="241" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/GUI Version.py</url>
+          <line>2469</line>
+          <option name="timeStamp" value="243" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
